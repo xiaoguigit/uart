@@ -1,6 +1,6 @@
-/*本程序符合GPL条约
-uart.h 
-一组操作串口的函数
+/*
+* uart.h 
+*
 */
   
 #ifndef __UART_H__

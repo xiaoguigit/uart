@@ -1,5 +1,6 @@
-/*本程序符合GPL条约 
-MyCom.c 
+/*
+* mr_xiaogui@163.com
+* uart.c 
 */  
 #include <stdio.h>              // printf   
 #include <fcntl.h>              // open   
@@ -12,8 +13,8 @@ MyCom.c
 #include <sys/ioctl.h>          // ioctl   
 #include "uart.h"   
     
-//#define TTY_DEV "/dev/ttyS" //端口路径   
-#define TTY_DEV "/dev/pts/2" //端口路径   
+
+#define TTY_DEV "/dev/pts/2" //端口路径, 这里是虚拟串口   
     
 #define TIMEOUT_SEC(buflen,baud) (buflen*20/baud+2)  //接收超时   
 #define TIMEOUT_USEC 0   
@@ -40,7 +41,7 @@ char *get_ptty(pportinfo_t pportinfo)
 }  
     
 /******************************************* 
- *  波特率转换函数（请确认是否正确） 
+ *  波特率转换函数
 ********************************************/  
 int convbaud(unsigned long int baudrate)  
 {  
@@ -66,7 +67,7 @@ int convbaud(unsigned long int baudrate)
     
 /******************************************* 
  *  Setup comm attr 
- *  fdcom: 串口文件描述符，pportinfo: 待设置的端口信息（请确认） 
+ *  fdcom: 串口文件描述符，pportinfo: 待设置的端口信息
  * 
 ********************************************/  
 int PortSet(int fdcom, const pportinfo_t pportinfo)  
@@ -163,7 +164,7 @@ int PortOpen(pportinfo_t pportinfo)
     
     ptty = get_ptty(pportinfo);  
     //fdcom = open(ptty, O_RDWR | O_NOCTTY | O_NONBLOCK | O_NDELAY);   
-    fdcom = open(ptty, O_RDWR | O_NOCTTY | O_NONBLOCK);  
+    fdcom = open(ptty, O_RDWR | O_NOCTTY | O_NONBLOCK);  // 这里用非阻塞
     //fdcom = open(ptty, O_RDWR | O_NOCTTY);
     return (fdcom);  
 }  
@@ -212,7 +213,7 @@ int PortRecv(int fdcom, char *data, int datalen, int baudrate)
     tv_timeout.tv_usec = TIMEOUT_USEC;  
     
     //fs_sel = select(fdcom+1, &fs_read, NULL, NULL, &tv_timeout);  
-	fs_sel = select(fdcom+1, &fs_read, NULL, NULL, NULL);  
+	fs_sel = select(fdcom+1, &fs_read, NULL, NULL, NULL);  // 无限等待
     if(fs_sel){  
         readlen = read(fdcom, data, datalen);  
         return(readlen);  
